@@ -55,11 +55,14 @@ class MelDecoder(nn.Module):
     """
     Decoder Network
     """
-    def __init__(self, num_hidden):
+    def __init__(self, num_hidden, device=t.device('mps')):
         """
         :param num_hidden: dimension of hidden
         """
         super(MelDecoder, self).__init__()
+
+        self.device = device
+
         self.pos_emb = nn.Embedding.from_pretrained(get_sinusoid_encoding_table(1024, num_hidden, padding_idx=0),
                                                     freeze=True)
         self.pos_dropout = nn.Dropout(p=0.1)
@@ -83,18 +86,12 @@ class MelDecoder(nn.Module):
         if self.training:
             m_mask = pos.ne(0).type(t.float)
             mask = m_mask.eq(0).unsqueeze(1).repeat(1, decoder_len, 1)
-            if next(self.parameters()).is_cuda:
-                mask = mask + t.triu(t.ones(decoder_len, decoder_len).cuda(), diagonal=1).repeat(batch_size, 1, 1).byte()
-            else:
-                mask = mask + t.triu(t.ones(decoder_len, decoder_len), diagonal=1).repeat(batch_size, 1, 1).byte()
+            mask = mask + t.triu(t.ones(decoder_len, decoder_len).to(self.device), diagonal=1).repeat(batch_size, 1, 1).byte()
             mask = mask.gt(0)
             zero_mask = c_mask.eq(0).unsqueeze(-1).repeat(1, 1, decoder_len)
             zero_mask = zero_mask.transpose(1, 2)
         else:
-            if next(self.parameters()).is_cuda:
-                mask = t.triu(t.ones(decoder_len, decoder_len).cuda(), diagonal=1).repeat(batch_size, 1, 1).byte()
-            else:
-                mask = t.triu(t.ones(decoder_len, decoder_len), diagonal=1).repeat(batch_size, 1, 1).byte()
+            mask = t.triu(t.ones(decoder_len, decoder_len).to(self.device), diagonal=1).repeat(batch_size, 1, 1).byte()
             mask = mask.gt(0)
             m_mask, zero_mask = None, None
 

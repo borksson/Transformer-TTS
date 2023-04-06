@@ -10,3 +10,4 @@ runs/
 test.ipynb
 synthesis.ipynb
 log*
+env/
