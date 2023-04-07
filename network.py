@@ -163,14 +163,14 @@ class ModelPostNet(nn.Module):
 
     def forward(self, mel):
         print("POST NET:")
-        print(mel)
+        print("MEL INPUT HAS NAN:", t.isnan(mel).any())
         mel = mel.transpose(1, 2)
-        print(mel)
+        print("MEL TRANSPOSE HAS NAN:", t.isnan(mel).any())
         mel = self.pre_projection(mel)
-        print(mel)
+        print("MEL PRE PROJECTION HAS NAN:", t.isnan(mel).any())
         mel = self.cbhg(mel).transpose(1, 2)
-        print(mel)
+        print("MEL CBHG HAS NAN:", t.isnan(mel).any())
         mag_pred = self.post_projection(mel).transpose(1, 2)
-        print(mag_pred)
+        print("MAG PRED HAS NAN:", t.isnan(mag_pred).any())
 
         return mag_pred

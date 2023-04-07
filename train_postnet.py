@@ -41,9 +41,6 @@ def main():
             mel = mel.to(device)
             mag = mag.to(device)
 
-            print("MEL:", mel)
-            print("MAG:", mag)
-
             print("MEL HAS NAN:", t.isnan(mel).any())
             print("MAG HAS NAN:", t.isnan(mag).any())
             
