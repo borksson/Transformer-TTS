@@ -162,15 +162,15 @@ class ModelPostNet(nn.Module):
         self.post_projection = Conv(hp.hidden_size, (hp.n_fft // 2) + 1)
 
     def forward(self, mel):
-        print("POST NET:")
-        print("MEL INPUT HAS NAN:", t.isnan(mel).any())
+        #print("POST NET:")
+        #print("MEL INPUT HAS NAN:", t.isnan(mel).any())
         mel = mel.transpose(1, 2)
-        print("MEL TRANSPOSE HAS NAN:", t.isnan(mel).any())
+        #print("MEL TRANSPOSE HAS NAN:", t.isnan(mel).any())
         mel = self.pre_projection(mel)
-        print("MEL PRE PROJECTION HAS NAN:", t.isnan(mel).any())
+        #print("MEL PRE PROJECTION HAS NAN:", t.isnan(mel).any())
         mel = self.cbhg(mel).transpose(1, 2)
-        print("MEL CBHG HAS NAN:", t.isnan(mel).any())
+        #print("MEL CBHG HAS NAN:", t.isnan(mel).any())
         mag_pred = self.post_projection(mel).transpose(1, 2)
-        print("MAG PRED HAS NAN:", t.isnan(mag_pred).any())
+        #print("MAG PRED HAS NAN:", t.isnan(mag_pred).any())
 
         return mag_pred

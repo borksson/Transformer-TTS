@@ -393,36 +393,36 @@ class CBHG(nn.Module):
 
         convbank_list = list()
         convbank_input = input_
-        print("CONV BANK INPUT HAS NAN:", t.isnan(convbank_input).any())
+        #print("CONV BANK INPUT HAS NAN:", t.isnan(convbank_input).any())
 
         # Convolution bank filters
         for k, (conv, batchnorm) in enumerate(zip(self.convbank_list, self.batchnorm_list)):
             convbank_input = t.relu(batchnorm(self._conv_fit_dim(conv(convbank_input), k+1).contiguous()))
             convbank_list.append(convbank_input)
-        print("CONV BANK HAS NAN:", t.isnan(convbank_input).any())
+        #print("CONV BANK HAS NAN:", t.isnan(convbank_input).any())
 
         # Concatenate all features
         conv_cat = t.cat(convbank_list, dim=1)
-        print("CONV CAT HAS NAN:", t.isnan(conv_cat).any())
+        #print("CONV CAT HAS NAN:", t.isnan(conv_cat).any())
 
         # Max pooling
         conv_cat = self.max_pool(conv_cat)[:,:,:-1]
-        print("CONV MAX POOL HAS NAN:", t.isnan(conv_cat).any())
+        #print("CONV MAX POOL HAS NAN:", t.isnan(conv_cat).any())
 
         # Projection
         conv_projection = t.relu(self.batchnorm_proj_1(self._conv_fit_dim(self.conv_projection_1(conv_cat))))
         conv_projection = self.batchnorm_proj_2(self._conv_fit_dim(self.conv_projection_2(conv_projection))) + input_
-        print("CONV PROJECTION HAS NAN:", t.isnan(conv_projection).any())
+        #print("CONV PROJECTION HAS NAN:", t.isnan(conv_projection).any())
 
         # Highway networks
         highway = self.highway.forward(conv_projection.transpose(1,2))
-        print("HIGHWAY HAS NAN:", t.isnan(highway).any())
+        #print("HIGHWAY HAS NAN:", t.isnan(highway).any())
 
         # Bidirectional GRU
         
-        self.gru.flatten_parameters()
+        #self.gru.flatten_parameters()
         out, _ = self.gru(highway)
-        print("CBHG OUT HAS NAN:", t.isnan(out).any())
+        #print("CBHG OUT HAS NAN:", t.isnan(out).any())
 
         return out
 

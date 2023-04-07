@@ -29,9 +29,8 @@ def main():
 
     for epoch in range(hp.epochs):
         dataloader = DataLoader(dataset, batch_size=hp.batch_size, shuffle=True, collate_fn=collate_fn_postnet, drop_last=True, num_workers=8)
-        #pbar = tqdm(total=len(dataloader))
+        pbar = tqdm(total=len(dataloader))
         for data in dataloader:
-            #pbar.set_description("Processing at epoch %d"%epoch)
             global_step += 1
             if global_step < 400000:
                 adjust_learning_rate(optimizer, global_step)
@@ -41,8 +40,8 @@ def main():
             mel = mel.to(device)
             mag = mag.to(device)
 
-            print("MEL HAS NAN:", t.isnan(mel).any())
-            print("MAG HAS NAN:", t.isnan(mag).any())
+            #print("MEL HAS NAN:", t.isnan(mel).any())
+            #print("MAG HAS NAN:", t.isnan(mag).any())
             
             mag_pred = m.forward(mel)
 
@@ -66,8 +65,9 @@ def main():
                 t.save({'model':m.state_dict(),
                                  'optimizer':optimizer.state_dict()},
                                 os.path.join(hp.checkpoint_path,'checkpoint_postnet_%d.pth.tar' % global_step))
-                
-            #pbar.update(1)
+            
+            pbar.set_description('epoch:{} batch:{} loss:{:.4f}'.format(epoch, global_step, loss.item()))
+            pbar.update(1)
 
             
             

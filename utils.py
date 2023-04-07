@@ -57,23 +57,30 @@ def spectrogram2wav(mag):
     Returns:
       wav: A 1-D numpy array.
     '''
+    print("MAG INPUT:", mag)
     # transpose
     mag = mag.T
+    print("MAG TRANSPOSED:", mag)
 
     # de-noramlize
     mag = (np.clip(mag, 0, 1) * hp.max_db) - hp.max_db + hp.ref_db
+    print("MAG DE-NORMALIZED:", mag)
 
     # to amplitude
     mag = np.power(10.0, mag * 0.05)
+    print("MAG TO AMPLITUDE:", mag)
 
     # wav reconstruction
     wav = griffin_lim(mag**hp.power)
+    print("WAV RECONSTRUCTED:", wav)
 
     # de-preemphasis
     wav = signal.lfilter([1], [1, -hp.preemphasis], wav)
+    print("WAV DE-PREEMPHASIS:", wav)
 
     # trim
     wav, _ = librosa.effects.trim(wav)
+    print("WAV TRIMMED:", wav)
 
     return wav.astype(np.float32)
 
