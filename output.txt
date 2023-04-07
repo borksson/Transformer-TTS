@@ -1903,3 +1903,5 @@ tensor([[[2.7571e-01, 2.4341e-01, 1.5215e-01,  ..., 1.0000e-08,
           0.0000e+00, 0.0000e+00],
          [0.0000e+00, 0.0000e+00, 0.0000e+00,  ..., 0.0000e+00,
           0.0000e+00, 0.0000e+00]]], device='mps:0')
+NaN or Inf found in input tensor.
+NaN or Inf found in input tensor.
