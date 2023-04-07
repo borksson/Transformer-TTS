@@ -26,7 +26,7 @@ class PrepareDataset(Dataset):
         return len(self.landmarks_frame)
 
     def __getitem__(self, idx):
-        wav_name = os.path.join(self.root_dir, self.landmarks_frame.ix[idx, 0]) + '.wav'
+        wav_name = os.path.join(self.root_dir, self.landmarks_frame.iloc[idx, 0])
         mel, mag = get_spectrograms(wav_name)
         
         np.save(wav_name[:-4] + '.pt', mel)
@@ -37,9 +37,7 @@ class PrepareDataset(Dataset):
         return sample
     
 if __name__ == '__main__':
+    print("STARTING CONVERSION")
     dataset = PrepareDataset(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
     dataloader = DataLoader(dataset, batch_size=1, drop_last=False, num_workers=8)
-    from tqdm import tqdm
-    pbar = tqdm(dataloader)
-    for d in pbar:
-        pass
+    print("COMPLETED")

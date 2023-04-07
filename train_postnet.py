@@ -13,30 +13,39 @@ def adjust_learning_rate(optimizer, step_num, warmup_step=4000):
         
 def main():
 
+    device = t.device('mps')
+
     dataset = get_post_dataset()
     global_step = 0
     
-    m = nn.DataParallel(ModelPostNet().cuda())
+    m = nn.DataParallel(ModelPostNet().to(device))
 
     m.train()
     optimizer = t.optim.Adam(m.parameters(), lr=hp.lr)
 
     writer = SummaryWriter()
 
-    for epoch in range(hp.epochs):
+    print("Start training...")
 
+    for epoch in range(hp.epochs):
         dataloader = DataLoader(dataset, batch_size=hp.batch_size, shuffle=True, collate_fn=collate_fn_postnet, drop_last=True, num_workers=8)
-        pbar = tqdm(dataloader)
-        for i, data in enumerate(pbar):
-            pbar.set_description("Processing at epoch %d"%epoch)
+        #pbar = tqdm(total=len(dataloader))
+        for data in dataloader:
+            #pbar.set_description("Processing at epoch %d"%epoch)
             global_step += 1
             if global_step < 400000:
                 adjust_learning_rate(optimizer, global_step)
                 
             mel, mag = data
         
-            mel = mel.cuda()
-            mag = mag.cuda()
+            mel = mel.to(device)
+            mag = mag.to(device)
+
+            print("MEL:", mel)
+            print("MAG:", mag)
+
+            print("MEL HAS NAN:", t.isnan(mel).any())
+            print("MAG HAS NAN:", t.isnan(mag).any())
             
             mag_pred = m.forward(mel)
 
@@ -60,6 +69,8 @@ def main():
                 t.save({'model':m.state_dict(),
                                  'optimizer':optimizer.state_dict()},
                                 os.path.join(hp.checkpoint_path,'checkpoint_postnet_%d.pth.tar' % global_step))
+                
+            #pbar.update(1)
 
             
             

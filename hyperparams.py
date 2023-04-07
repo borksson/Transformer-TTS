@@ -23,14 +23,15 @@ n_iter = 60
 # power = 1.5
 outputs_per_step = 1
 
-epochs = 10000
+epochs = 1
 lr = 0.001
-save_step = 2000
+save_step = 8
 image_step = 500
-batch_size = 32
+batch_size = 2
 
 cleaners='english_cleaners'
 
-data_path = './data/LJSpeech-1.1'
+#data_path = './data/LJSpeech-1.1'
+data_path = './data/project_max_1'
 checkpoint_path = './checkpoint'
 sample_path = './samples'

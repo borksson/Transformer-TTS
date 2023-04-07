@@ -47,6 +47,7 @@ def synthesis(text, args):
             mel_input = t.cat([mel_input, mel_pred[:,-1:,:]], dim=1)
 
         mag_pred = m_post.forward(postnet_pred)
+        print(mag_pred)
         
     wav = spectrogram2wav(mag_pred.squeeze(0).cpu().numpy())
     write(hp.sample_path + "/test.wav", hp.sr, wav)
@@ -56,7 +57,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--restore_step1', type=int, help='Global step to restore checkpoint', default=160000)
     parser.add_argument('--restore_step2', type=int, help='Global step to restore checkpoint', default=100000)
-    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=400)
+    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=10)
     parser.add_argument('--device', type=str, help='device', default="mps")
 
     args = parser.parse_args()

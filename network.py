@@ -162,9 +162,15 @@ class ModelPostNet(nn.Module):
         self.post_projection = Conv(hp.hidden_size, (hp.n_fft // 2) + 1)
 
     def forward(self, mel):
+        print("POST NET:")
+        print(mel)
         mel = mel.transpose(1, 2)
+        print(mel)
         mel = self.pre_projection(mel)
+        print(mel)
         mel = self.cbhg(mel).transpose(1, 2)
+        print(mel)
         mag_pred = self.post_projection(mel).transpose(1, 2)
+        print(mag_pred)
 
         return mag_pred
