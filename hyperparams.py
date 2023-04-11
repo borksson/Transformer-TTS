@@ -29,6 +29,12 @@ save_step = 8
 image_step = 500
 batch_size = 2
 
+# epochs = 10000
+# lr = 0.001
+# save_step = 2000
+# image_step = 500
+# batch_size = 32
+
 cleaners='english_cleaners'
 
 #data_path = './data/LJSpeech-1.1'
