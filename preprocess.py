@@ -32,7 +32,7 @@ class LJDatasets(Dataset):
 
     def __getitem__(self, idx):
         wav_name = os.path.join(self.root_dir, self.landmarks_frame.iloc[idx, 0])
-        text = self.landmarks_frame.ix[idx, 1]
+        text = self.landmarks_frame.iloc[idx, 2]
 
         text = np.asarray(text_to_sequence(text, [hp.cleaners]), dtype=np.int32)
         mel = np.load(wav_name[:-4] + '.pt.npy')
