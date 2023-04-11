@@ -13,20 +13,24 @@ def adjust_learning_rate(optimizer, step_num, warmup_step=4000):
         
 def main():
 
+    t.cuda.empty_cache()
+
+    device = t.device("cuda")
+
     dataset = get_dataset()
     global_step = 0
     
-    m = nn.DataParallel(Model().cuda())
+    m = nn.DataParallel(Model(device).to(device))
 
     m.train()
     optimizer = t.optim.Adam(m.parameters(), lr=hp.lr)
 
-    pos_weight = t.FloatTensor([5.]).cuda()
+    pos_weight = t.FloatTensor([5.]).to(device)
     writer = SummaryWriter()
     
     for epoch in range(hp.epochs):
 
-        dataloader = DataLoader(dataset, batch_size=hp.batch_size, shuffle=True, collate_fn=collate_fn_transformer, drop_last=True, num_workers=16)
+        dataloader = DataLoader(dataset, batch_size=hp.batch_size, shuffle=True, collate_fn=collate_fn_transformer, drop_last=True, num_workers=8)
         pbar = tqdm(dataloader)
         for i, data in enumerate(pbar):
             pbar.set_description("Processing at epoch %d"%epoch)
@@ -38,11 +42,11 @@ def main():
             
             stop_tokens = t.abs(pos_mel.ne(0).type(t.float) - 1)
             
-            character = character.cuda()
-            mel = mel.cuda()
-            mel_input = mel_input.cuda()
-            pos_text = pos_text.cuda()
-            pos_mel = pos_mel.cuda()
+            character = character.to(device)
+            mel = mel.to(device)
+            mel_input = mel_input.to(device)
+            pos_text = pos_text.to(device)
+            pos_mel = pos_mel.to(device)
             
             mel_pred, postnet_pred, attn_probs, stop_preds, attns_enc, attns_dec = m.forward(character, mel_input, pos_text, pos_mel)
 
@@ -63,31 +67,31 @@ def main():
                 }, global_step)
             
             
-            if global_step % hp.image_step == 1:
+            # if global_step % hp.image_step == 1:
                 
-                for i, prob in enumerate(attn_probs):
+            #     for i, prob in enumerate(attn_probs):
                     
-                    num_h = prob.size(0)
-                    for j in range(4):
+            #         num_h = prob.size(0)
+            #         for j in range(4):
                 
-                        x = vutils.make_grid(prob[j*16] * 255)
-                        writer.add_image('Attention_%d_0'%global_step, x, i*4+j)
+            #             x = vutils.make_grid(prob[j*16] * 255)
+            #             writer.add_image('Attention_%d_0'%global_step, x, i*4+j)
                 
-                for i, prob in enumerate(attns_enc):
-                    num_h = prob.size(0)
+            #     for i, prob in enumerate(attns_enc):
+            #         num_h = prob.size(0)
                     
-                    for j in range(4):
+            #         for j in range(4):
                 
-                        x = vutils.make_grid(prob[j*16] * 255)
-                        writer.add_image('Attention_enc_%d_0'%global_step, x, i*4+j)
+            #             x = vutils.make_grid(prob[j*16] * 255)
+            #             writer.add_image('Attention_enc_%d_0'%global_step, x, i*4+j)
             
-                for i, prob in enumerate(attns_dec):
+            #     for i, prob in enumerate(attns_dec):
 
-                    num_h = prob.size(0)
-                    for j in range(4):
+            #         num_h = prob.size(0)
+            #         for j in range(4):
                 
-                        x = vutils.make_grid(prob[j*16] * 255)
-                        writer.add_image('Attention_dec_%d_0'%global_step, x, i*4+j)
+            #             x = vutils.make_grid(prob[j*16] * 255)
+            #             writer.add_image('Attention_dec_%d_0'%global_step, x, i*4+j)
                 
             optimizer.zero_grad()
             # Calculate gradients

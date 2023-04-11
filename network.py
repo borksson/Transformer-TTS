@@ -138,10 +138,10 @@ class Model(nn.Module):
     """
     Transformer Network
     """
-    def __init__(self):
+    def __init__(self, device):
         super(Model, self).__init__()
         self.encoder = Encoder(hp.embedding_size, hp.hidden_size)
-        self.decoder = MelDecoder(hp.hidden_size)
+        self.decoder = MelDecoder(hp.hidden_size, device)
 
     def forward(self, characters, mel_input, pos_text, pos_mel):
         memory, c_mask, attns_enc = self.encoder.forward(characters, pos=pos_text)

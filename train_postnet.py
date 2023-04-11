@@ -13,7 +13,9 @@ def adjust_learning_rate(optimizer, step_num, warmup_step=4000):
         
 def main():
 
-    device = t.device('mps')
+    device = t.device('cuda')
+
+    t.cuda.empty_cache()
 
     dataset = get_post_dataset()
     global_step = 0

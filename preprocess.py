@@ -5,7 +5,7 @@ import os
 import librosa
 import numpy as np
 from text import text_to_sequence
-import collections
+from collections.abc import Mapping
 from scipy import signal
 import torch as t
 import math
@@ -72,7 +72,7 @@ class PostDatasets(Dataset):
 def collate_fn_transformer(batch):
 
     # Puts each data field into a tensor with outer dimension batch size
-    if isinstance(batch[0], collections.Mapping):
+    if isinstance(batch[0], Mapping):
 
         text = [d['text'] for d in batch]
         mel = [d['mel'] for d in batch]
@@ -103,7 +103,7 @@ def collate_fn_transformer(batch):
 def collate_fn_postnet(batch):
 
     # Puts each data field into a tensor with outer dimension batch size
-    if isinstance(batch[0], collections.Mapping):
+    if isinstance(batch[0], Mapping):
 
         mel = [d['mel'] for d in batch]
         mag = [d['mag'] for d in batch]
