@@ -102,6 +102,9 @@ class MelDecoder(nn.Module):
         decoder_input = self.norm(decoder_input)
 
         # Get positional embedding, apply alpha and add
+        # FIXME: Lool this is jank, we should change this first if there are problems
+        pos = t.clamp(pos, 1, 1023)
+        # print(t.max(pos), t.min(pos))
         pos = self.pos_emb(pos)
         decoder_input = pos * self.alpha + decoder_input
 

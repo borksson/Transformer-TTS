@@ -40,4 +40,8 @@ if __name__ == '__main__':
     print("STARTING CONVERSION")
     dataset = PrepareDataset(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
     dataloader = DataLoader(dataset, batch_size=1, drop_last=False, num_workers=8)
+    from tqdm import tqdm
+    pbar = tqdm(dataloader)
+    for d in pbar:
+        pass
     print("COMPLETED")

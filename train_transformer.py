@@ -38,7 +38,7 @@ def main():
             if global_step < 400000:
                 adjust_learning_rate(optimizer, global_step)
                 
-            character, mel, mel_input, pos_text, pos_mel, _ = data
+            character, mel, mel_input, pos_text, pos_mel, _= data
             
             stop_tokens = t.abs(pos_mel.ne(0).type(t.float) - 1)
             

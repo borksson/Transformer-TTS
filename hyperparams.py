@@ -31,9 +31,9 @@ outputs_per_step = 1
 
 epochs = 100
 lr = 0.001
-save_step = 100
+save_step = 2500
 image_step = 500
-batch_size = 32
+batch_size = 3
 
 cleaners='english_cleaners'
 

@@ -42,7 +42,7 @@ class LJDatasets(Dataset):
         pos_mel = np.arange(1, mel.shape[0] + 1)
 
         sample = {'text': text, 'mel': mel, 'text_length':text_length, 'mel_input':mel_input, 'pos_mel':pos_mel, 'pos_text':pos_text}
-
+        #print(wav_name)
         return sample
     
 class PostDatasets(Dataset):
