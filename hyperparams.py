@@ -18,6 +18,8 @@ hidden_size = 256
 embedding_size = 512
 max_db = 100
 ref_db = 20
+
+window_size = 100
     
 n_iter = 60
 # power = 1.5
@@ -35,3 +37,5 @@ cleaners='english_cleaners'
 data_path = './data/project_max_1'
 checkpoint_path = './checkpoint'
 sample_path = './samples'
+
+input_file = "./input.txt"
