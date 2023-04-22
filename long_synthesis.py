@@ -47,8 +47,8 @@ def long_synthesis(text, args):
             mel_input = t.cat([mel_input, mel_pred[:,-1:,:]], dim=1)
             # If input is bigger than window size, remove the first frame
             if mel_input.size(1) > hp.window_size:
-                mel_input = t.cat((mel_input[:1],mel_input[1+1:]))
-            print(mel_input.shape)
+                mel_input = t.cat((mel_input[:1],mel_input[2:]))
+            #print(mel_input.shape)
 
         mag_pred = m_post.forward(postnet_pred)
         print(mag_pred)
@@ -59,9 +59,9 @@ def long_synthesis(text, args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--restore_step1', type=int, help='Global step to restore checkpoint', default=220500)
+    parser.add_argument('--restore_step1', type=int, help='Global step to restore checkpoint', default=200500)
     parser.add_argument('--restore_step2', type=int, help='Global step to restore checkpoint', default=100000)
-    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=400)
+    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=1000)
     parser.add_argument('--device', type=str, help='device', default="mps")
 
     args = parser.parse_args()

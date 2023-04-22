@@ -19,7 +19,7 @@ embedding_size = 512
 max_db = 100
 ref_db = 20
 
-window_size = 100
+window_size = 150
     
 n_iter = 60
 # power = 1.5
