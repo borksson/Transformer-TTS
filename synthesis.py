@@ -57,8 +57,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--restore_step1', type=int, help='Global step to restore checkpoint', default=220500)
     parser.add_argument('--restore_step2', type=int, help='Global step to restore checkpoint', default=100000)
-    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=200)
+    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=400)
     parser.add_argument('--device', type=str, help='device', default="mps")
 
     args = parser.parse_args()
-    synthesis("i love in and out french fries",args)
+    synthesis("if you had the chance to change your fate",args)
