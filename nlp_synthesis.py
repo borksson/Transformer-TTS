@@ -48,9 +48,6 @@ def synthesis(text, path, args):
             mel_pred, postnet_pred, attn, stop_token, _, attn_dec = m.forward(text, mel_input, pos_text, pos_mel)
             mel_input = t.cat([mel_input, mel_pred[:,-1:,:]], dim=1)
 
-            if mel_input.size(1) > hp.window_size:
-                mel_input = t.cat((mel_input[:1],mel_input[2:]))
-
         mag_pred = m_post.forward(postnet_pred)
         print(mag_pred)
         
@@ -62,7 +59,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--restore_step1', type=int, help='Global step to restore checkpoint', default=220500)
     parser.add_argument('--restore_step2', type=int, help='Global step to restore checkpoint', default=100000)
-    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=400)
+    parser.add_argument('--max_len', type=int, help='Synthesis steps', default=1000)
     parser.add_argument('--device', type=str, help='device', default="mps")
 
     args = parser.parse_args()
